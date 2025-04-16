@@ -1,0 +1,5 @@
+MONGODB_DIR=C:\Program Files\MongoDB\Server\8.0\bin
+DB_PATH=C:\data\db
+NODE_SERVER_PATH=.\api
+MONGO_URI=mongodb://127.0.0.1:27017/ShipRoomsReservation
+XAMPP_PATH=C:\xampp

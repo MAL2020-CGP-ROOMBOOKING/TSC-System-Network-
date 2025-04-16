@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Room - Room Booking System</title>
+
+  <!-- Google Font (Montserrat) -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="/scripts/env.js"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="../../css/styles.css" />
+
+  <!-- Logout Script -->
+  <script defer src="../../scripts/logout.js"></script>
+
+  <!-- Inline CSS for a Modern Look -->
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      color: #343a40;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    footer {
+      background: #343a40;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: auto;
+    }
+    h1 {
+      color: #ffffff;
+    }
+    p.lead {
+      color: #e0e0e0;
+    }
+    /* Navbar customization */
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand, .nav-link {
+      font-weight: 500;
+    }
+    /* Booking Section */
+    .container.my-4 {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 2rem;
+    }
+    .container.my-4 h1 {
+      color: #007BFF;
+    }
+    .table-responsive {
+      margin-top: 1.5rem;
+    }
+    .table th, .table td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    /* Slot styles */
+    .slot {
+      cursor: pointer;
+      border-radius: 5px;
+      text-align: center;
+      padding: 10px;
+      transition: all 0.3s ease;
+    }
+    .slot:hover {
+      transform: scale(1.03);
+    }
+    .available {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .selected {
+      background-color: #fff3cd;
+      color: #856404;
+      font-weight: bold;
+    }
+    .booked {
+      background-color: #f8d7da;
+      color: #721c24;
+      pointer-events: none;
+    }
+    /* Modal Styles */
+    .modal-content {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .modal-header {
+      background-color: #007BFF;
+      color: #fff;
+    }
+    .modal-title {
+      font-weight: 500;
+    }
+    /* Button Styles */
+    .btn-primary {
+      background-color: #007BFF;
+      border-color: #007BFF;
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="dashboard.html">TSC ROOM RESERVATION SYSTEM</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="booking.html">Booking</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="feedback.html">Feedback</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#" id="logoutBtn">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Booking Section -->
+  <div class="container my-4">
+    <h1>Book a Room</h1>
+    <p class="lead">
+      Select a room to view its weekly schedule and make a booking.
+      <br /><small class="text-muted">Note: You can book up to 3 slots (hours) per day.</small>
+    </p>
+
+    <!-- Room Selection -->
+    <div class="mb-4">
+      <label for="roomSelect" class="form-label">Select Room</label>
+      <select id="roomSelect" class="form-select">
+        <option value="">Loading rooms...</option>
+      </select>
+    </div>
+
+    <!-- Weekly Navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <button class="btn btn-secondary" id="prevWeekBtn">Previous Week</button>
+      <h4 id="weekRange" class="text-primary"></h4>
+      <button class="btn btn-secondary" id="nextWeekBtn">Next Week</button>
+    </div>
+
+    <!-- Schedule Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr id="tableHeaders">
+            <th>Time</th>
+            <!-- Dynamic day headers will be inserted here -->
+          </tr>
+        </thead>
+        <tbody id="scheduleTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Book Button -->
+    <div class="text-center">
+      <button id="confirmBookingBtn" class="btn btn-primary btn-lg w-100">
+        Book Selected Slots
+      </button>
+    </div>
+  </div>
+
+  <!-- Additional Users Modal -->
+  <div class="modal fade" id="additionalUsersModal" tabindex="-1" aria-labelledby="additionalUsersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="additionalUsersModalLabel">Additional Users Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Please provide the details of the other users who will be using the room.
+            <br>
+            <small class="text-muted">(Minimum: 4 entries, Maximum: 8 entries)</small>
+          </p>
+          <form id="additionalUsersForm">
+            <div id="additionalUsersContainer">
+              <!-- Dynamic participant fields will be added here -->
+            </div>
+            <div class="mt-3">
+              <button type="button" class="btn btn-secondary" id="addParticipantBtn">Add Participant</button>
+              <button type="button" class="btn btn-danger" id="removeParticipantBtn">Remove Participant</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span id="participantCount" class="me-auto"></span>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="confirmAdditionalUsersBtn">Confirm Participants</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; TSC ROOM RESERVATION SYSTEM</p>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom Booking Script -->
+  <script defer src="../../scripts/booking.js"></script>
+</body>
+</html>

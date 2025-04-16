@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "67ffe9dcfe305d15d65a3640"
+  },
+  "name": "admin",
+  "email": "admin@gmail.com",
+  "phone": "123456789",
+  "password": "$2b$10$RjyPF1KaPjHWPJhem0gDROAZ0.Pym0iRvbxHNZRQM93EUlmaLAOMG",
+  "role": "admin",
+  "createdAt": {
+    "$date": "2025-04-16T17:33:16.363Z"
+  },
+  "updatedAt": {
+    "$date": "2025-04-16T17:33:16.363Z"
+  },
+  "__v": 0
+}]

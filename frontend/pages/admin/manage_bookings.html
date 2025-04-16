@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Bookings - Room Booking System</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/styles.css" />
+
+  <script src="/scripts/env.js"></script>
+  <!-- Logout Script (Ensure Express serves /scripts/logout.js) -->
+  <script defer src="/scripts/logout.js"></script>
+
+  <!-- Inline Styles -->
+  <style>
+    /* Global Layout & Typography */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      color: #343a40;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      background: #343a40;
+      color: #ffffff;
+      text-align: center;
+      padding: 12px 0;
+    }
+
+    /* Navbar Styling */
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .navbar-nav .nav-link {
+      font-weight: 500;
+    }
+
+    /* Filter Section */
+    .filter-container {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 15px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Table Styles */
+    .table-responsive {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+    .table thead th {
+      background-color: #007BFF;
+      color: #ffffff;
+      font-weight: 500;
+      vertical-align: middle;
+      border: none;
+    }
+    .table tbody td {
+      vertical-align: middle;
+    }
+    .table tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    .table-actions button {
+      margin-right: 5px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .status-booked {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status-completed {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    .status-expired {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .table-responsive {
+        font-size: 0.85rem;
+      }
+      .btn {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/pages/admin/dashboard.html">Admin Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/pages/admin/dashboard.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/pages/admin/manage_bookings.html">Manage Bookings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/pages/admin/manage_users.html">Manage Users</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/pages/admin/manage_room.html">Manage Rooms</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/pages/admin/manage_announcement.html">Announcement</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/pages/admin/manage_feedback.html">Manage Feedback</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#" id="logoutBtn">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container my-5">
+    <h1 class="text-center mb-4">Manage Bookings</h1>
+    <p class="text-center">
+      Approve, reject, or manage bookings in the system.<br>
+      <small class="text-muted">Records are sorted by the latest date and time at the top.</small>
+    </p>
+
+    <!-- Filter Options -->
+    <div class="filter-container">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="statusFilter" class="form-label">Filter by Status</label>
+          <select id="statusFilter" class="form-select">
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Booked">Booked</option>
+            <option value="Completed">Completed</option>
+            <option value="Expired">Expired</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="filterMonth" class="form-label">Select Month</label>
+          <select id="filterMonth" class="form-select">
+            <option value="">All Months</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="filterYear" class="form-label">Select Year</label>
+          <select id="filterYear" class="form-select">
+            <option value="">All Years</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button id="downloadReportBtn" class="btn btn-primary w-100">
+            Download Records
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Room</th>
+            <th>Day</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsTable">
+          <!-- Dynamic Booking Data Will Be Loaded Here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; TSC ROOM RESERVATION SYSTEM</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap Bundle (JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS for managing bookings -->
+  <script src="/scripts/manage_bookings.js"></script>
+  <!-- Logout Script -->
+  <script src="/scripts/logout.js"></script>
+</body>
+</html>

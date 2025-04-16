@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Users - Room Booking System</title>
+
+  <!-- Google Font (Roboto) -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="/scripts/env.js"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/styles.css" />
+
+  <!-- Inline Styles -->
+  <style>
+    /* Global Styles & Typography */
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      color: #343a40;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      background: #343a40;
+      color: #ffffff;
+      text-align: center;
+      padding: 12px 0;
+    }
+    /* Navbar */
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .navbar-nav .nav-link {
+      font-weight: 500;
+    }
+    /* Filter Section */
+    .filter-container {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 15px;
+      margin-bottom: 1.5rem;
+    }
+    /* Table Styling */
+    .table-responsive {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+    .table thead th {
+      background-color: #007BFF;
+      color: #ffffff;
+      font-weight: 500;
+      vertical-align: middle;
+      border: none;
+    }
+    .table tbody td {
+      vertical-align: middle;
+    }
+    .table tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    .table-actions button {
+      margin-right: 5px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .status-booked {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status-completed {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    .status-expired {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    /* Modals */
+    .modal-header {
+      background-color: #007BFF;
+      color: #ffffff;
+    }
+    .modal-title {
+      font-weight: 500;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .table-responsive {
+        font-size: 0.85rem;
+      }
+      .btn {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/pages/admin/dashboard.html">Admin Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/pages/admin/dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/pages/admin/manage_bookings.html">Manage Bookings</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/pages/admin/manage_users.html">Manage Users</a></li>
+          <li class="nav-item"><a class="nav-link" href="/pages/admin/manage_room.html">Manage Rooms</a></li>
+          <li class="nav-item"><a class="nav-link" href="/pages/admin/manage_announcement.html">Announcement</a></li>
+          <li class="nav-item"><a class="nav-link" href="/pages/admin/manage_feedback.html">Manage Feedback</a></li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#" id="logoutBtn">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container my-5">
+    <h1 class="text-center">Manage Users</h1>
+    <p class="text-center text-muted">View, add, or edit users in the system.</p>
+
+    <!-- Filter Section -->
+    <div class="filter-container row mb-3">
+      <div class="col-md-6">
+        <input
+          type="text"
+          id="userFilter"
+          class="form-control"
+          placeholder="Search by Name, Email, or Role"
+        />
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+          Add User
+        </button>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTable">
+          <!-- Dynamic user data will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+      <p>&copy; TSC ROOM RESERVATION SYSTEM</p>
+    </div>
+  </footer>
+
+  <!-- Add User Modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm">
+            <div class="mb-3">
+              <label for="userName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="userName" required />
+            </div>
+            <div class="mb-3">
+              <label for="userEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="userEmail" required />
+            </div>
+            <div class="mb-3">
+              <label for="userPhone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="userPhone" required />
+            </div>
+            <div class="mb-3">
+              <label for="userPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="userPassword" required />
+            </div>
+            <div class="mb-3">
+              <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="ConfirmPassword" required />
+            </div>
+            <div class="mb-3">
+              <label for="userRole" class="form-label">Role</label>
+              <select class="form-select" id="userRole" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editUserForm">
+            <!-- Hidden field for user ID -->
+            <input type="hidden" id="editUserId" />
+            <div class="mb-3">
+              <label for="editUserName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="editUserName" required />
+            </div>
+            <div class="mb-3">
+              <label for="editUserEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="editUserEmail" required />
+            </div>
+            <div class="mb-3">
+              <label for="editUserPhone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="editUserPhone" required />
+            </div>
+            <div class="mb-3">
+              <label for="editUserRole" class="form-label">Role</label>
+              <select class="form-select" id="editUserRole" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <!-- Optional Password Fields for Updating Password -->
+            <div class="mb-3">
+              <label for="editUserPassword" class="form-label">Password (leave blank to keep unchanged)</label>
+              <input type="password" class="form-control" id="editUserPassword" />
+            </div>
+            <div class="mb-3">
+              <label for="editConfirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="editConfirmPassword" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle (JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS for managing users -->
+  <script src="/scripts/manageUsers.js"></script>
+  <!-- Logout Script -->
+  <script defer src="/scripts/logout.js"></script>
+</body>
+</html>
