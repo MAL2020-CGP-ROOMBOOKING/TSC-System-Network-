@@ -28,8 +28,7 @@ echo "📦 Importing data from '$JSON_FILE'..."
     --collection "$COLLECTION_NAME" \
     --file "$JSON_FILE" \
     --jsonArray \
-    --drop  # Optional: Drops collection if it exists
-echo "✅ Data imported successfully!"
+  echo "✅ Data imported successfully!"
 
 # === Done ===
 echo "🎉 MongoDB setup complete!"

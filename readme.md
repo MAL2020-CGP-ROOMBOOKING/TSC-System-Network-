@@ -16,5 +16,4 @@ Must give executable permission for:
 Then run this script in order
 1. Create_Cert.sh
 2. DB_Setup_Script.sh
-      *this sctipt reset database
 3. Run.sh
