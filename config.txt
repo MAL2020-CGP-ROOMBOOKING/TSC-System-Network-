@@ -1,5 +1,22 @@
-MONGODB_DIR=C:\Program Files\MongoDB\Server\8.0\bin
-DB_PATH=C:\data\db
-NODE_SERVER_PATH=.\api
-MONGO_URI=mongodb://127.0.0.1:27017/ShipRoomsReservation
-XAMPP_PATH=C:\xampp
+# === MongoDB & Mongosh Settings ===
+MONGO_VERSION="6.0.4"
+MONGO_URL="https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-${MONGO_VERSION}.tgz"
+
+MONGOSH_VERSION="1.10.1"
+MONGOSH_URL="https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-x64.tgz"
+
+# === Database Details ===
+DB_NAME="ShipRoomsReservation"
+COLLECTION_NAME="admin"
+JSON_FILE="./database/data.json"  # adjust if your file name is different
+
+# === Directories ===
+DBPATH="./data/db"
+MONGO_DIR="./mongod"
+MONGOSH_DIR="./mongosh"
+MONGO_BIN="$MONGO_DIR/bin"
+MONGOSH_BIN="$MONGOSH_DIR/bin"
+
+
+# === Node.js API Settings ===
+API_SERVER="./api/server.js"
