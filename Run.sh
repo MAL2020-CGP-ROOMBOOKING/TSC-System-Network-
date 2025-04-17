@@ -7,17 +7,17 @@ source ./config.txt
 # === Ensure DB Path Exists ===
 mkdir -p "$DBPATH"
 
-# === START MONGODB ===
-echo "🚀 Starting MongoDB server..."
-"$MONGO_BIN" --dbpath "$DBPATH" --fork --logpath "$DBPATH/mongod.log"
-sleep 5  # Let MongoDB start properly
+# === START MONGODB IN NEW TERMINAL ===
+echo "🚀 Starting MongoDB server in new terminal..."
+gnome-terminal -- bash -c \
+"\"$MONGO_BIN/mongod\" --dbpath \"$DBPATH\"; exec bash"
+
+# Give MongoDB time to start
+sleep 3
 
 # === START NODE SERVER ===
-echo "🚀 Starting Node.js API server..."
-node "$API_SERVER"
+echo "🚀 Starting Node.js API server in current terminal..."
+cd api
+node server.js
 
-# (Optional) If you want Node to run *in the background* too, you can do:
-# nohup node "$API_SERVER" > ./api/server.log 2>&1 &
-# echo "Node.js server running in background."
-
-echo "🎉 Both MongoDB and API server started!"
+echo "🎉 Servers started in separate terminals!"
