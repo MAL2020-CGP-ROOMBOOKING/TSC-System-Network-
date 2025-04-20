@@ -27,7 +27,7 @@ echo "📦 Importing data from '$JSON_FILE'..."
     --db "$DB_NAME" \
     --collection "$COLLECTION_NAME" \
     --file "$JSON_FILE" \
-    --jsonArray \
+    --jsonArray
   echo "✅ Data imported successfully!"
 
 # === Done ===
