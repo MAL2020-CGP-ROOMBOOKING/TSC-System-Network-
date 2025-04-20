@@ -114,32 +114,40 @@
     </div>
   </nav>
 
-  <!-- Login Form -->
-  <main>
-    <div class="card">
-      <div class="card-header">
-        <h2>Login</h2>
-      </div>
-      <div class="card-body">
-        <form id="loginForm">
-          <div class="mb-3">
-            <label for="email" class="form-label">Email Address</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-        </form>
-        <div class="mt-3 text-center">
-          <p>Don't have an account? <a href="register.html">Register here</a></p>
+ <!-- Login Form -->
+<main>
+  <div class="card">
+    <div class="card-header">
+      <h2>Login</h2>
+    </div>
+    <div class="card-body">
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
         </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+        </div>
+
+        <!-- Forgot Password -->
+        <div class="mb-3 text-end">
+          <a href="forgot-password.html" class="text-decoration-none text-primary">Forgot Password?</a>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+
+      <div class="mt-3 text-center">
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
       </div>
     </div>
-  </main>
+  </div>
+</main>
+
 
   <!-- Footer -->
   <footer>

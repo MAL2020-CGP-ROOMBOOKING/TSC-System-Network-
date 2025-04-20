@@ -2,48 +2,21 @@ const Feedback = require("../models/Feedback");
 const sendEmail = require("../utils/emailService");
 
 /**
- * Delete feedback by ID
- */
-const deleteFeedback = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({ message: "Invalid feedback ID" });
-    }
-
-    // Find and delete feedback
-    const feedback = await Feedback.findByIdAndDelete(id);
-
-    if (!feedback) {
-      return res.status(404).json({ message: "Feedback not found" });
-    }
-
-    res.json({ message: "Feedback deleted successfully." });
-  } catch (error) {
-    console.error("❌ Error deleting feedback:", error.message);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
-
-/**
- * Create new feedback
+ * Create new feedback (no file upload)
  */
 const createFeedback = async (req, res) => {
   try {
     const { category, subject, message, rating, anonymous } = req.body;
 
-    let attachment = "";
-    if (req.file) {
-      attachment = req.file.path;
+    if (!category || !subject || !message) {
+      return res.status(400).json({ message: "Category, subject, and message are required." });
     }
 
     const feedbackData = {
       category,
       subject,
       message,
-      rating,
-      attachment,
+      rating: rating || null,
       status: "Pending",
     };
 
@@ -64,11 +37,14 @@ const createFeedback = async (req, res) => {
 };
 
 /**
- * Get all feedback (for admin)
+ * Get all feedback (admin)
  */
 const getAllFeedback = async (req, res) => {
   try {
-    const feedbacks = await Feedback.find().sort({ createdAt: -1 });
+    const feedbacks = await Feedback.find()
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+
     res.json(feedbacks);
   } catch (error) {
     console.error("❌ Error fetching feedback:", error.message);
@@ -76,8 +52,63 @@ const getAllFeedback = async (req, res) => {
   }
 };
 
+/**
+ * Delete feedback by ID
+ */
+const deleteFeedback = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Invalid feedback ID" });
+    }
+
+    const feedback = await Feedback.findByIdAndDelete(id);
+
+    if (!feedback) {
+      return res.status(404).json({ message: "Feedback not found" });
+    }
+
+    res.json({ message: "Feedback deleted successfully." });
+  } catch (error) {
+    console.error("❌ Error deleting feedback:", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+/**
+ * Update feedback status (admin)
+ */
+const updateFeedbackStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = ["Pending", "Reviewed", "Resolved"];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const updated = await Feedback.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Feedback not found" });
+    }
+
+    res.json({ message: "Status updated successfully", feedback: updated });
+  } catch (error) {
+    console.error("❌ Error updating status:", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 module.exports = {
   createFeedback,
   getAllFeedback,
-  deleteFeedback, // 🔥 Export delete function
+  deleteFeedback,
+  updateFeedbackStatus, // ✅ Exported
 };

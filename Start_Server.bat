@@ -15,7 +15,7 @@ timeout /t 5 >nul
 
 echo Opening the system landing page...
 REM Change the URL/port to match your server setup
-start "" "http://localhost:3000"
+start "" "http://localhost:5000"
 
 echo.
 echo Starting Node.js Server in this same window...

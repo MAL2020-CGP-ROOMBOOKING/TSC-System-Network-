@@ -87,6 +87,8 @@ connectDB()
     app.use("/css", express.static(path.join(__dirname, "../frontend/css")));
     app.use("/scripts", express.static(path.join(__dirname, "../frontend/scripts")));
     app.use("/pages", express.static(path.join(__dirname, "../frontend/pages")));
+    app.use("/uploads", express.static(path.join(__dirname, "../frontend/assets/uploads")));
+
     
 
 
@@ -113,7 +115,7 @@ connectDB()
     });
 
     // Start Server on Network
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 5000;
     const HOST = "0.0.0.0"; // Allows access from all devices on the network
     const LOCAL_IP = getLocalIP(); // Get dynamic local network IP
 

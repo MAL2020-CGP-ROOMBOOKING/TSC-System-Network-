@@ -1,8 +1,6 @@
 ** Create a database on MongoDB "ShipRoomsReservation" **
-open database Folder and import collection For Admin
+open database Folder and import collection
 
--Testing -
-Admin 
-Email : admin@gmail.com
-password : 123456
-
+Admin
+Email : Admin@gmail.com
+Password : 123456
