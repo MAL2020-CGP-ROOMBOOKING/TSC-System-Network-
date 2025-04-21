@@ -2,9 +2,16 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 
-const { createFeedback, getAllFeedback, deleteFeedback } = require("../controllers/feedbackController"); // ✅ Added deleteFeedback
+const {
+  createFeedback,
+  getAllFeedback,
+  deleteFeedback,
+  updateFeedbackStatus, 
+} = require("../controllers/feedbackController");
+
 const authMiddleware = require("../middlewares/authMiddleware");
 
+// Multer setup (optional if no file needed, keep for future flexibility)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -15,13 +22,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ✅ POST: Create feedback
-router.post("/", upload.single("attachment"), createFeedback);
+// ✅ Create feedback (user) — supports optional file upload
+router.post("/", upload.single("attachment"), authMiddleware, createFeedback);
 
-// ✅ GET: Fetch all feedback
+// ✅ Get all feedback (admin)
 router.get("/", authMiddleware, getAllFeedback);
 
-// 🔥 FIXED: DELETE route (this was missing)
+// ✅ Delete feedback by ID (admin)
 router.delete("/:id", authMiddleware, deleteFeedback);
+
+// ✅ Update feedback status (admin)
+router.patch("/status/:id", authMiddleware, updateFeedbackStatus);
 
 module.exports = router;
